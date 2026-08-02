@@ -121,14 +121,14 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   FDCAN_Config();
-  Serial_Print(&huart1, "Hello World");
+  //Serial_Print(&huart1, "Hello World");
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(volts.r_V1 == 1 || volts.r_V2 == 1 || volts.r_V3 == 1)
+	  if(volts.r_V1 == 1 && volts.r_V2 == 1 && volts.r_V3 == 1)
 	  {
 		  Run_Balancing();
 	  }
@@ -153,6 +153,8 @@ int main(void)
 	  {
 		Error_Handler();
 	  }
+	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_7);
+	  HAL_Delay(10);
 
     /* USER CODE END WHILE */
 
@@ -300,7 +302,7 @@ static void MX_USART1_UART_Init(void)
 static void MX_GPIO_Init(void)
 {
   /* USER CODE BEGIN MX_GPIO_Init_1 */
-
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
@@ -308,6 +310,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
+
+  /*Configure GPIO pin : LED_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
 
   /* USER CODE END MX_GPIO_Init_2 */
 }
